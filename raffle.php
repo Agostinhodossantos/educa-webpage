@@ -50,7 +50,7 @@
                 <!-- Contact Us Thumb -->
                 <div class="col-12 col-lg-6">
                     <div class="contact-us-thumb mb-100">
-                        <img src="img/educa/brindes.png">
+                        <img src="img/educa/game.jpg">
                     </div>
                 </div>
 
@@ -63,33 +63,13 @@
                         </a>
 
 
-                        <?php 
-                          
-                          $show = false;
-                          if(isset($_SESSION["data"])){
-                            $show = false;
-                        
-                          }else{
-                            $show = true;
-                          }
-                          
-                        ?>
-
-                        <?php if($show == true): ?>
-
-                            <form method="get" action="sorteio/index.php">
-                            <div class="form-group">
-
-                                <input type="number" name="num" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Insira um número">
-
+                           <form>
+                            <div class="form-group" >
+                                <input type="number" name="num" maxlength="60" onmouseover="checkInput()" id="num" class="form-control" id="numInput" placeholder="Insira um número">
                             </div>
-
-                            <button  class="btn btn btn-outline-info btn-lg btn-block">Sorteiar</button>
-
                         </form>
+                        <button  class="btn btn btn-outline-info btn-lg btn-block" onClick="play()" id="btn_sortear">Sorteiar</button>
 
-                        <?php endif; ?>
-                       
 
                         <br>
                         <br>
@@ -152,154 +132,63 @@
     <script src="js/db/real-time-database.js"></script>
     
     <script>
-    function addButton() {
-    var name = document.getElementById('name').value;
-    var email = document.getElementById('email').value;
-    var password = document.getElementById('password').value;
-    var contact = document.getElementById('contact').value;
-    var genre = document.getElementById('genre').value;
-    var date_of_birth = document.getElementById('date_of_birth').value;
-    var category = document.getElementById('category').value;
-    var residence = document.getElementById('residence').value;
-    var userId = "aaa";
-    var imageUrl = "ddd";
 
-    firebase.auth().createUserWithEmailAndPassword(email, password )
-    .then(function(data){
-        userId = data.user.uid;
-    
-        create(userId ,name , email ,  password , imageUrl ,  contact ,  genre , date_of_birth , category , residence);
-        
-    //Here if you want you can sign in the user
-    }).catch(function(error) {
-        alert(""+error);
-    //Handle error
-});
+    hideInputGame();
+    function hideInputGame() {
 
-}
+        firebase.auth().onAuthStateChanged(function(user) {
 
+        if (user) {
+        //item.val().name;
+            firebase.database().ref('randGift').on('value', function(snapshot) {
+                snapshot.forEach(function(item) {
 
-function create(userId ,name , email ,  password , imageUrl ,  contact ,  genre , date_of_birth , category , residence) {
-    var data = {
-               userId:userId,
-               name:name, 
-               email:email, 
-               password:password,
-               imageUrl:imageUrl, 
-               contact:contact,
-               genre:genre, 
-               date_of_birth:date_of_birth, 
-               category:category,
-               residence:residence
-    };
+                    if (item.val().uid !== null && item.val().uid !== undefined) {
+                        var db_uid = item.val().uid.toString().trim();
+                        var user_uid = user.uid.toString().trim();
 
-    firebase.database().ref().child('users').child(userId).set(data , function(error){
-            if (error) {
-                alert("Data could not be saved." + error);
-                location.href="intro.php";
-            } else {
-                location.href="index.php";
-         }
-    });
-      
-}
+                        if (db_uid == user_uid) {
+                            console.log(user_uid);
+                            disable();
+                            return;
+                        }
 
-
-    function randomGift(){
-        randomUser();
-    }
-
-    function randomUser(){
-        var  gift = "";
-
-        const dbRefResenas = firebase.database().ref('users')
-        dbRefResenas.once("value")
-            .then(function(snapshot){
-              var max      = snapshot.numChildren();
-              var min      = 0;
-              var countSnap   = 0;
-
-              var numberDrawn = Math.floor(Math.random() * (max - min) ) + min;
-
-                snapshot.forEach(function (item) {
-                    countSnap++;
-                    console.log(item.val().name +"numberDrawn: "+numberDrawn );
-                    if(countSnap == numberDrawn){
-                        var uidRand = "<?php echo  date("Ymd")?>";
-                        createRandUser(item.val().userId , item.val().name , gift , numberDrawn , uidRand);
-                        return ;
                     }
-                });
-
-            });
-    }
-
-
-  //  genereteUIDIn();
-
-    function genereteUIDIn(){
-        const dbRefResenas = firebase.database().ref('institution')
-        dbRefResenas.once("value")
-            .then(function(snapshot){
-                  snapshot.forEach(function (item) {
-                    
-                    console.log(item.val().institution_name +" link = educam.herokuapp.com//"+item.val().uid );
-
-                    
-
-        firebase.database().ref().child('institution').child(item.val().uid).child('phone').set('' , function(error){
-            if (error) {
-                console.log("error");
-            } else {
-                console.log("good");
-            }
-               
-        });
-
-
-
-
-
-
 
                 });
-
             });
-    }
 
+        } else {
+            location.href = 'intro.php';
+        }
 
-
-    function getRndInteger(min, max) {
-        return Math.floor(Math.random() * (max - min) ) + min;
-    }
-
-    function randRoulette(){
-        var data = {
-            uid:uid,
-            data:data,
-            name:name
-        };
-    }
-
-    function createRandUser(uid , name , gift , numRand , uidRand){
-        var data = {
-            uid:uid,
-            name:name,
-            gift:gift,
-            numRand:numRand,
-            uidRand:uidRand
-        };
-
-        firebase.database().ref().child('randGift').child(uidRand).set(data , function(error){
-            if (error) {
-                alert("Data could not be saved." + error);
-                location.href="intro.php";
-            } else {
-                location.href="raffle.php";
-            }
         });
 
+    }
 
+    function disable() {
+        // document.getElementById("num").value +="Whatever text!";
+        // document.getElementById("num").disabled = true; 
+    }
+   
+    function play() {
+        var num = document.getElementById("num").value;
+        
+        if(num !== null && num !== "") {
+            location.href = "sorteio/index.php?num="+num;  
+        } else {
+            
+        }
+          
+    }
+
+    function checkInput() {
+        var numInput = document.getElementById("num");
+        if(numInput.disabled) {
+            //alert("disabled")
+        }else {
+           // alert("active")
+        }
     }
 
     </script>

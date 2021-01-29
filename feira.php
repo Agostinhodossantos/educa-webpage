@@ -459,12 +459,15 @@
         })
 
         swalWithBootstrapButtons.fire({
-            title: 'Quer ganhar bolsa de estudo ou laptop?',
-            text: "Roleta da sorte",
-            icon: 'warning',
+           
+          
+            imageUrl: 'img/educa/game.jpg',
+            imageWidth: 400,
+            imageHeight: 400,
+            imageAlt: 'Custom image',
             showCancelButton: true,
-            confirmButtonText: 'Sim, quero!',
-            cancelButtonText: 'Nao!',
+            confirmButtonText: 'Jogar agora',
+            cancelButtonText: 'Jogar depois',
             reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {

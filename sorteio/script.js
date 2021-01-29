@@ -13,6 +13,7 @@ var red = [32, 19, 21, 25, 34, 27, 36, 30, 23, 5, 16, 1, 14, 9, 18, 7, 12, 3];
 $mask.text(maskDefault);
 
 start();
+
 $spin.on('click', function() {
 
 
@@ -111,13 +112,13 @@ function win() {
     var giftWin = Math.floor(Math.random() * gift.length);
 
     Swal.fire({
-        title: 'Boooom (:',
-        text: 'Parabéns você ganhou ' + gift[giftWin],
+        // title: 'Boooom (:',
+        // text: 'Parabéns você ganhou ' + gift[giftWin],
         imageUrl: 'img/you_win.jpg',
         confirmButtonText: 'OK',
         allowOutsideClick: false,
         imageWidth: 400,
-        imageHeight: 200,
+        imageHeight: 400,
         imageAlt: 'Custom image',
     }).then((result) => {
         if (result.isConfirmed) {
@@ -166,13 +167,12 @@ function win() {
 
 function lose() {
     Swal.fire({
-        title: 'Opsss!',
         text: 'Volte a tentar mais tarde.',
         imageUrl: 'img/you_lose.jpg',
         confirmButtonText: 'Terminar',
         allowOutsideClick: false,
         imageWidth: 400,
-        imageHeight: 200,
+        imageHeight: 400,
         imageAlt: 'Custom image',
     }).then((result) => {
         if (result.isConfirmed) {
