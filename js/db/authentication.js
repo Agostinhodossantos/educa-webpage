@@ -1,7 +1,5 @@
 firebase.auth().onAuthStateChanged(function(user) {
-    if (user) {
-      // User is signed in.
-    } else {
-      window.location("../intro.php");
+    if (!user) {
+        window.location.href("../intro.php");
     }
-  });
+});

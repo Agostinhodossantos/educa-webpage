@@ -1242,7 +1242,7 @@
                                         <div class="col-12 col-lg-6">
                                             <div class="form-group">
                                                 <input type="text" tabindex="2" class="form-control mb-30"
-                                                    name="apelido" id="name2" placeholder="Sobre nome">
+                                                    name="apelido" id="surname" placeholder="Sobre nome">
                                             </div>
                                         </div>
                                         <!-- Form Group -->
@@ -1269,15 +1269,22 @@
                                             </div>
                                         </div>
                                         <!-- Button -->
-                                        <div class="col-12">
+                                        <!-- <div class="col-12">
                                             <button type="submit" class="btn confer-btn-white">Enviar messagem <i
                                                     class="zmdi zmdi-long-arrow-right"></i></button>
-                                        </div>
+                                        </div> -->
                                     </div>
 
 
                                 </div>
                             </form>
+
+                              <!-- Button -->
+                              <div class="col-12">
+                                            <button onClick="sendMessage()" class="btn confer-btn-white">Enviar messagem <i
+                                                    class="zmdi zmdi-long-arrow-right"></i></button>
+                                        </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -1331,8 +1338,6 @@
     <script src="js/default-assets/active.js"></script>
 
     <!-- <script src="mail.js"></script> -->
-
-    
 
     <!-- custom lib popup -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
@@ -1451,6 +1456,74 @@
         }
 
     });
+
+
+
+    function sendMessage() {
+        var name = document.getElementById('name').value;
+        var surname = document.getElementById('surname').value; 
+        var email = document.getElementById('email').value; 
+        var contact = document.getElementById('contact').value;
+        var message = document.getElementById('message').value;
+        var uid = uuidv4();
+        var userUid = "";
+
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                userUid = user.uid.toString().trim();
+            } else {
+                sendMessageError("Mensagem nao enviada, faça login" , 1);
+            }
+        });
+
+        var data = {
+            uid:uid,
+            userUid:userUid,
+            name:name,
+            surname:surname,
+            contact:email,
+            message:message
+        }
+
+        console.log(data)
+
+        firebase.database().ref().child('educaMessage').child(uid).set(data , function(error){
+            if (error) {
+                sendMessageError("Mensagem nao enviada" , 2);
+            } else {
+                sendMessageSuccess();
+            }
+        });
+
+    }
+
+    //show dialog: message sent successfully//
+    function sendMessageSuccess() {
+        Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'Mensagem enviada com sucesso',
+            showConfirmButton: false,
+            timer: 1500
+        })
+
+        window.location.reload(true)
+
+    }
+
+    //@code the variable code is used to check the error code//
+    function sendMessageError(error , codeError) {
+        var loginError = 1;
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: error,
+        })
+
+        if(codeError == loginError) {
+            location.href ="intro.php"
+        }
+    }
     </script>
 
 

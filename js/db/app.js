@@ -13,6 +13,10 @@
 //   firebase.initializeApp(firebaseConfig);
 //   //firebase.analytics();
 
+//base de dados
+//linha de cliente
+//anuncios
+// //
 
 var firebaseConfig = {
     apiKey: "AIzaSyCcU1JVVV7WU1vvlsKN-12_z80U-ncDsoI",
@@ -26,5 +30,5 @@ var firebaseConfig = {
 };
 
 // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  firebase.analytics();
+firebase.initializeApp(firebaseConfig);
+firebase.analytics();

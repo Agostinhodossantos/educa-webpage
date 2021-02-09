@@ -243,7 +243,7 @@
                                             <!-- Form Group -->
                                             <div class="col-12 col-lg-6">
                                                 <div class="form-group">
-                                                    <input type="text" class="form-control mb-30" name="name" id="name-2" placeholder="Apelido" required>
+                                                    <input type="text" class="form-control mb-30" name="name" id="surname" placeholder="Apelido" required>
                                                 </div>
                                             </div>
                                             <!-- Form Group -->
@@ -255,13 +255,13 @@
                                             <!-- Form Group -->
                                             <div class="col-12 col-lg-6">
                                                 <div class="form-group">
-                                                    <input type="text" class="form-control mb-30" name="subject" id="subject" placeholder="Seu Numero">
+                                                    <input type="text" class="form-control mb-30" name="contact" id="contact" placeholder="Seu Numero">
                                                 </div>
                                             </div>
                                             <!-- Form Group -->
                                             <div class="col-12">
                                                 <div class="form-group">
-                                                    <textarea name="message" class="form-control mb-30" id="Mensagem" cols="30" rows="6" placeholder="Mensagem" required></textarea>
+                                                    <textarea name="message" class="form-control mb-30" id="message" cols="30" rows="6" placeholder="Mensagem" required></textarea>
                                                 </div>
                                             </div>
                                             <!-- Button -->
@@ -270,8 +270,11 @@
                                     </div>
                                 </form>
                                 <div class="col-12">
-                                <a href="mailto:<?php echo $email; ?>" class="btn confer-btn-white mt-50 wow fadeInUp" style="background:#f8871f;border-radius:0px">Enviar Mensagem <i
-                                            class="zmdi zmdi-long-arrow-right"></i></a>
+
+                                <button onClick="sendMessage()" class="btn confer-btn-white mt-50 wow fadeInUp" style="background:#f8871f;border-radius:0px">Enviar Mensagem <i
+                                            class="zmdi zmdi-long-arrow-right"></i></button>
+
+                                
                                 </div>
                             </div>
                         </div>
@@ -352,9 +355,7 @@
                         <?php endif?>
 
                             <?php if($countCollege > 4): ?>
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong2">
-                                    ver todas faculdades
-                                </button>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong2">ver todas faculdades </button>
                             <?php endif; ?>
 
                         </div>
@@ -373,8 +374,7 @@
 
                                         <?php
                                         $ref = 'institution/'.$uid.'/college';
-                                        $fetchdata = $database->getReference($ref)->getValue();
-                                        ?>
+                                        $fetchdata = $database->getReference($ref)->getValue(); ?>
 
                                         <?php if($fetchdata != null):?>
                                             <?php foreach( $fetchdata as $key => $row):?>
@@ -438,17 +438,15 @@
                                 <div class="row">
 
                                     <?php
-                                	$ref = 'institution/'.$uid.'/gallery';
-                                    $fetchdata = $database->getReference($ref)->getValue();
+                                        $ref = 'institution/'.$uid.'/gallery';
+                                        $fetchdata = $database->getReference($ref)->getValue();
                                     ?>
 
                                      <?php if($fetchdata != null):?>
-                                     <?php
-
-                                     foreach( $fetchdata as $key => $row): ?>
-                                           <div class="col-4">
-                                             <a href="#"><img src="<?php echo $row['url']; ?>" alt=""></a>
-                                           </div>
+                                     <?php foreach( $fetchdata as $key => $row): ?>
+                                        <div class="col-4">
+                                            <a href="#"><img src="<?php echo $row['url']; ?>" alt=""></a>
+                                        </div>
                                     <?php endforeach ?>
                                     <?php endif?>
 
@@ -530,20 +528,17 @@
                                 <div class="row">
 
                                  <?php
-                                                                      $ref = 'institution/'.$uid.'/gallery';
-                                                                      $fetchdata = $database->getReference($ref)->getValue();
-                                                                      ?>
+                                  $ref = 'institution/'.$uid.'/gallery';
+                                  $fetchdata = $database->getReference($ref)->getValue();
+                                  ?>
 
-                                                                      <?php if($fetchdata != null):?>
-                                                                      <?php
-
-                                                                       foreach( $fetchdata as $key => $row): ?>
-
-                                                                                         <div class="col-4">
-                                                                                                  <a href="<?php echo $row['url']; ?>" class="single-gallery-item"><img src="<?php echo $row['url']; ?>" alt=""></a>
-                                                                                          </div>
-                                                                       <?php endforeach ?>
-                                                                       <?php endif?>
+                                  <?php if($fetchdata != null):?>
+                                    <?php foreach( $fetchdata as $key => $row): ?>
+                                        <div class="col-4">
+                                            <a href="<?php echo $row['url']; ?>" class="single-gallery-item"><img src="<?php echo $row['url']; ?>" alt=""></a>
+                                        </div>
+                                    <?php endforeach ?>
+                                   <?php endif?>
 
                                 </div>
                             </div>
@@ -595,6 +590,86 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> Todos
     <script src="https://www.gstatic.com/firebasejs/7.2.0/firebase.js"></script>
     <script src="js/db/app.js"></script>
     <script src="js/db/real-time-database.js"></script>
+
+
+
+    <script>
+
+
+ 
+function sendMessage() {
+        var name = document.getElementById('name').value;
+        var surname = document.getElementById('surname').value;
+        var email = document.getElementById('email').value;
+        var contact = document.getElementById('contact').value;
+        var message = document.getElementById('message').value;
+        var uid = uuidv4();
+        var userUid = "";
+
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                userUid = user.uid.toString().trim();
+                addMessage(name , surname  , email , contact , message , uid , userUid);
+            } else {
+                sendMessageError("Mensagem nao enviada, faça login", 1);
+            }
+        });
+    
+    }
+
+    function addMessage(name , surname  , email , contact , message , uid , userUid) {
+        var data = {
+            uid: uid,
+            userUid: userUid,
+            name: email,
+            surname: surname,
+            contact: email,
+            message: message
+        }
+
+        console.log(data);
+
+        firebase.database().ref().child('institution').child("<?php echo $uid; ?>").child('message').child(uid).set(data, function(error) {
+            if (error) {
+                sendMessageError("Mensagem nao enviada", 2);
+            } else {
+                sendMessageSuccess();
+            }
+        });
+
+    }
+
+    //show dialog: message sent successfully//
+    function sendMessageSuccess() {
+        Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'Mensagem enviada com sucesso',
+            showConfirmButton: false,
+            timer: 1500
+        })
+
+        window.location.reload(true)
+
+    }
+
+    //@code the variable code is used to check the error code//
+    function sendMessageError(error, codeError) {
+        var loginError = 1;
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: error,
+        })
+
+        if (codeError == loginError) {
+            location.href = "intro.php"
+        }
+    }
+
+
+
+    </script>
 
 
 

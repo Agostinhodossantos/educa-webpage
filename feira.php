@@ -371,7 +371,12 @@
     <!-- custom lib popup -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
-    <!-- end custom lib popup  -->
+    <!-- firebase -->
+    <script src="https://www.gstatic.com/firebasejs/7.2.0/firebase.js"></script>
+    <script src="js/db/app.js"></script>
+    <script src="js/db/real-time-database.js"></script>
+    <!-- authentication  -->
+    <script src="/js/db/authentication.js"> </script>
 
 
     <script type="text/javascript">

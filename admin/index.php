@@ -214,14 +214,14 @@ foreach($fetchdata as $key => $row){
      
 
       <!-- Nav Item - Tables -->
-      <li class="nav-item">
+      <!-- <li class="nav-item">
         <a class="nav-link" href="add_gallery.php?id=<?php echo $uid; ?>">
           <i class="fas fa-fw fa-camera"></i>
           <span>   </span></a>
-      </li>
+      </li> -->
 
-      <!-- Divider -->
-      <hr class="sidebar-divider d-none d-md-block">
+      <!-- Divider --> 
+      <!-- <hr class="sidebar-divider d-none d-md-block"> -->
 
       <!-- Sidebar Toggler (Sidebar) -->
       <div class="text-center d-none d-md-inline">
@@ -248,6 +248,53 @@ foreach($fetchdata as $key => $row){
 
             <!-- Nav Item - Search Dropdown (Visible Only XS) -->
            
+            <?php
+              $ref = 'institution/'.$uid.'/message';
+              $fetchdata = $database->getReference($ref)->getValue();  
+           ?>
+
+                  <!-- Nav Item - Messages -->
+                  <li class="nav-item dropdown no-arrow mx-1">
+                            <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-envelope fa-fw"></i>
+                                <!-- Counter - Messages -->
+                                <span class="badge badge-danger badge-counter"><?php echo count($fetchdata) ?></span>
+                            </a>
+                            <!-- Dropdown - Messages -->
+                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="messagesDropdown">
+                                <h6 class="dropdown-header">
+                                mensagens
+                                </h6>
+                               
+                              
+
+                               
+                                  <?php if($fetchdata != null):?>
+                                  
+                                   <?php foreach( $fetchdata as $key => $row): ?>
+
+                                    <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="dropdown-list-image mr-3">
+                                        <img class="rounded-circle" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60"
+                                            alt="">
+                                        <div class="status-indicator bg-success"></div>
+                                    </div>
+                                    <div>
+                                        <div class="text-truncate"><?php echo $row['message']; ; ?></div>
+                                        <div class="small text-gray-500"><?php echo $row['name']; ?></div>
+                                    </div>
+                                  </a>
+
+                                      
+                                   <?php endforeach ?>
+                                 <?php endif?>
+                                
+
+                                <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
+                            </div>
+                        </li>
 
 
             <div class="topbar-divider d-none d-sm-block"></div>
